@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductResource;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Validation\Rule;
@@ -10,8 +11,9 @@ use Illuminate\Validation\Rule;
 class ProductApiController extends Controller
 {
     //
-    public function index(){
-        return response()->json(Product::all(), 200);
+    public function index()
+    {
+        return ProductResource::collection(Product::all());
     }
 
     public function store(Request $request){
@@ -24,15 +26,14 @@ class ProductApiController extends Controller
 
         $product = Product::create($validated);
 
-        return response()->json([
-            'message' => 'Product created successfully',
-            'data' => $product
-        ], 201);
+        return (new ProductResource($product))->additional([
+            'message' => 'Product created successfully'
+            ]);
     }
 
     public function show(Product $product)
     {
-        return response()->json($product, 200);
+        return new ProductResource($product);
     }
 
     public function update(Request $request, Product $product)
@@ -51,10 +52,9 @@ class ProductApiController extends Controller
 
         $product->update($validated);
 
-        return response()->json([
-            'message' => 'Product updated successfully',
-            'data' => $product
-        ], 200);
+        return (new ProductResource($product))->additional([
+            'message' => 'Product updated successfully'
+            ]);
     }
 
     public function destroy(Product $product)
