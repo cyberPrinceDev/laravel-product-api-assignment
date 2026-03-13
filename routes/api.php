@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ProductApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -12,3 +13,5 @@ Route::get('/test', function () {
         "message" => "API is working!"
     ]);
 });
+
+Route::apiResource('products', ProductApiController::class);
